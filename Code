@@ -1,0 +1,156 @@
+import pygame
+import sys
+import math
+
+# Initialize Pygame
+pygame.init()
+
+# Screen setup
+screen_size = 300
+screen = pygame.display.set_mode((screen_size, screen_size))
+pygame.display.set_caption("Tic-Tac-Toe with AI")
+
+# Colors
+line_color = (0, 0, 0)
+player_color = (255, 0, 0)  # Red for player "X"
+ai_color = (0, 0, 255)  # Blue for AI "O"
+background_color = (255, 255, 255)
+
+# Game settings
+cell_size = screen_size // 3
+board = [['' for _ in range(3)] for _ in range(3)]  # 3x3 grid
+
+# Font settings
+font = pygame.font.Font(None, 80)
+
+
+# Check for a win condition
+def check_winner(board):
+    for row in range(3):
+        if board[row][0] == board[row][1] == board[row][2] != '':
+            return board[row][0]
+    for col in range(3):
+        if board[0][col] == board[1][col] == board[2][col] != '':
+            return board[0][col]
+    if board[0][0] == board[1][1] == board[2][2] != '':
+        return board[0][0]
+    if board[0][2] == board[1][1] == board[2][0] != '':
+        return board[0][2]
+    return None
+
+
+# Check for a draw
+def is_draw(board):
+    for row in board:
+        if '' in row:
+            return False
+    return True
+
+
+# Minimax algorithm for AI
+def minimax(board, depth, is_maximizing):
+    winner = check_winner(board)
+    if winner == 'X':
+        return -1
+    elif winner == 'O':
+        return 1
+    elif is_draw(board):
+        return 0
+
+    if is_maximizing:
+        best_score = -math.inf
+        for row in range(3):
+            for col in range(3):
+                if board[row][col] == '':
+                    board[row][col] = 'O'
+                    score = minimax(board, depth + 1, False)
+                    board[row][col] = ''
+                    best_score = max(score, best_score)
+        return best_score
+    else:
+        best_score = math.inf
+        for row in range(3):
+            for col in range(3):
+                if board[row][col] == '':
+                    board[row][col] = 'X'
+                    score = minimax(board, depth + 1, True)
+                    board[row][col] = ''
+                    best_score = min(score, best_score)
+        return best_score
+
+
+# Find the best move for AI
+def find_best_move(board):
+    best_score = -math.inf
+    best_move = None
+    for row in range(3):
+        for col in range(3):
+            if board[row][col] == '':
+                board[row][col] = 'O'
+                score = minimax(board, 0, False)
+                board[row][col] = ''
+                if score > best_score:
+                    best_score = score
+                    best_move = (row, col)
+    return best_move
+
+
+# Draw the grid and symbols
+def draw_board():
+    screen.fill(background_color)
+    # Draw grid lines
+    for i in range(1, 3):
+        pygame.draw.line(screen, line_color, (0, i * cell_size), (screen_size, i * cell_size), 2)
+        pygame.draw.line(screen, line_color, (i * cell_size, 0), (i * cell_size, screen_size), 2)
+    # Draw symbols
+    for row in range(3):
+        for col in range(3):
+            if board[row][col] == 'X':
+                text = font.render('X', True, player_color)
+                screen.blit(text, (col * cell_size + 30, row * cell_size + 20))
+            elif board[row][col] == 'O':
+                text = font.render('O', True, ai_color)
+                screen.blit(text, (col * cell_size + 30, row * cell_size + 20))
+
+
+# Main game loop
+running = True
+player_turn = True
+while running:
+    draw_board()
+    pygame.display.flip()
+
+    # Check for a winner
+    winner = check_winner(board)
+    if winner:
+        print(f"{winner} wins!")
+        pygame.time.wait(2000)
+        running = False
+    elif is_draw(board):
+        print("It's a draw!")
+        pygame.time.wait(2000)
+        running = False
+
+    # Event handling
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
+        # Player's turn
+        if player_turn and event.type == pygame.MOUSEBUTTONDOWN:
+            x, y = event.pos
+            row, col = y // cell_size, x // cell_size
+            if board[row][col] == '':
+                board[row][col] = 'X'
+                player_turn = False
+
+        # AI's turn
+        if not player_turn:
+            best_move = find_best_move(board)
+            if best_move:
+                row, col = best_move
+                board[row][col] = 'O'
+            player_turn = True
+
+pygame.quit()
