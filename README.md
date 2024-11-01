@@ -1,7 +1,5 @@
 Tic-Tac-Toe AI Game 🎮
 
-A Python-based Tic-Tac-Toe game where you play against an AI opponent powered by the Minimax algorithm. Using Python and Pygame, this game challenges you to beat an AI that’s designed to be practically unbeatable. Spoiler alert: after a few rounds, I realized I had about as much chance beating this AI as a paperclip has of winning a popularity contest!
-
 ##Project Overview
 
 This project is a classic Tic-Tac-Toe game with an AI that plays optimally, making it a formidable opponent. The AI uses the Minimax algorithm to evaluate all possible moves, choosing the best one every time. The player can click on an empty cell to make their move, and the AI will respond with its own, leading to an intense (and often humbling) back-and-forth.
@@ -15,7 +13,7 @@ This project is a classic Tic-Tac-Toe game with an AI that plays optimally, maki
 ##Functions Implemented
 
 *draw_board()
-Draws the 3x3 grid and places the "X" and "O" symbols based on player and AI moves. This function provides a visual representation of the board, so you don’t have to play Tic-Tac-Toe blind!
+Draws the 3x3 grid and places the "X" and "O" symbols based on player and AI moves. This function provides a visual representation of the board.
 
 *check_winner()
 Checks all rows, columns, and diagonals to determine if there’s a winner. It’s like a referee that instantly spots three in a row.
@@ -29,17 +27,4 @@ The brains behind the AI’s strategy. The Minimax algorithm calculates the best
 *find_best_move()
 Identifies the optimal move for the AI by using the Minimax function. This function ensures that the AI always chooses its move strategically, without a hint of randomness.
 
-*main game loop
-Controls the game’s flow, alternating between player and AI moves. It checks for win or draw conditions after each move, ensuring that the game progresses smoothly and ends when someone wins or the board is full.
 
-##How to Play
-
-Run the game using: python3 tic_tac_toe_ai.py
-
-The game window will open with a 3x3 Tic-Tac-Toe grid.
-
-Click on any empty cell to place your "X" on the board.
-
-The AI will respond with an "O" in an optimal location.
-
-The game ends when either the player or AI wins (three in a row), or the game results in a draw if the grid is filled without a winner.
